@@ -1,0 +1,91 @@
+name: 📦 Publish Packages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  version:
+    if: ${{ !contains(github.event.head_commit.message, 'changeset-release/') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    strategy:
+      matrix:
+        node-version: [ 22 ]
+
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        with:
+          commit: 'chore(action): update versions'
+          title: 'chore(action): update versions'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    if: ${{ contains(github.event.head_commit.message, 'changeset-release/') }}
+    runs-on: ubuntu-latest
+    environment: npm_auto_publish
+    permissions:
+      contents: write
+      pull-requests: write
+
+    strategy:
+      matrix:
+        node-version: [ 22 ]
+
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Publish packages
+        run: pnpm run pub:release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push tags
+        run: git push --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

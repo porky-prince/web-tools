@@ -1,0 +1,33 @@
+# IDE
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Vim swap files
+.s[a-z][a-z]
+.*.s[a-z][a-z]
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Node
+**/node_modules
+
+# log
+**/logs
+**/*.log
+
+# npm-debug log
+**/npm-debug.*
+
+# Jest Coverage
+**/coverage
+
+# eslint
+**/.eslintcache
+
+# dest
+**/dist
+**/build
