@@ -10,6 +10,9 @@ web-tools is a pnpm workspace monorepo for web tools.
 This repo publishes several packages that work together or independently. Each
 package links to its README for details:
 
+- [`ui-block`](packages/ui-block/README.md): Blocking user interaction
+  while async work is running.
+
 ## Scripts
 
 Run these scripts from the repo root with pnpm:

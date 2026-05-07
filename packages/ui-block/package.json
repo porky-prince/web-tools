@@ -1,0 +1,40 @@
+{
+  "name": "ui-block",
+  "version": "0.0.0",
+  "description": "Blocking user interaction while async work is running",
+  "author": "Porky Ke",
+  "homepage": "https://github.com/porky-prince/web-tools/packages/ui-block#readme",
+  "bugs": "https://github.com/porky-prince/web-tools/issues",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:porky-prince/web-tools.git",
+    "directory": "packages/ui-block"
+  },
+  "scripts": {
+    "start": "npm-run-all -l -p watch:*",
+    "watch:js": "vite build --watch",
+    "watch:types": "tsc --declaration --emitDeclarationOnly -w",
+    "build:js": "vite build",
+    "build:types": "tsc --declaration --emitDeclarationOnly",
+    "build": "del dist && npm-run-all -l build:js build:types",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "block",
+    "block-ui",
+    "overlay",
+    "loading",
+    "anti-nesting"
+  ]
+}
