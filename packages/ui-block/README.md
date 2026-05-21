@@ -4,18 +4,6 @@
 ships with a DOM-based overlay by default and also lets you provide a custom
 block implementation when you need different rendering behavior.
 
-## Installation
-
-Install the package with your preferred package manager.
-
-```sh
-pnpm add ui-block
-# or
-npm install ui-block
-# or
-yarn add ui-block
-```
-
 ## Quick start
 
 The default setup uses `DomBlock`, which appends an absolutely positioned
