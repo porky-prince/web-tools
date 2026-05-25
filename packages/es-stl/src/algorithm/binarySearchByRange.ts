@@ -1,27 +1,32 @@
 import { SearchRangeCallback } from '../type';
 
 /**
- * Binary search by range.
+ * Finds the index of a sorted range that contains `searchValue`.
  *
- * @template T
- * @param {T[]} array an object array after sort from small to large
- * @param {number} searchValue
- * @param {SearchRangeCallback<T>} callback
- * @returns {number}
+ * @remarks
+ * The callback writes the searchable range into the provided two-item
+ * `range` array as `[start, end]`. Ranges must be ordered from low to high.
+ *
+ * @typeParam T - Object type that describes each searchable range.
+ * @param array - Sorted array of range-like objects.
+ * @param searchValue - Numeric value to locate within a range.
+ * @param callback - Writes an element's inclusive range bounds.
+ * @returns The index of the containing range, or `-1` when no range matches.
+ *
  * @example
- * const dataList = [{s:0, e: 5}, {s:6, e: 18}, {s:19, e: 30}, ...];
- * binarySearchByRange(dataList, 10, (range: number[], data: {s: number, e: number}) => {
- *   range[0] = data.s;
- *   range[1] = data.e;
- * });
- * // => 1
+ * ```ts
+ * const dataList = [
+ *   { start: 0, end: 5 },
+ *   { start: 6, end: 18 },
+ *   { start: 19, end: 30 },
+ * ];
  *
- * const dataList = [{s:0, e: 5}, {s:5, e: 18}, {s:18, e: 30}, ...];
- * binarySearchByRange(dataList, 10, (range: number[], data: {s: number, e: number}) => {
- *   range[0] = data.s;
- *   range[1] = data.e - 1;
+ * const index = binarySearchByRange(dataList, 10, (range, data) => {
+ *   range[0] = data.start;
+ *   range[1] = data.end;
  * });
- * // => 1
+ * // index === 1
+ * ```
  */
 export function binarySearchByRange<T extends object>(
   array: T[],

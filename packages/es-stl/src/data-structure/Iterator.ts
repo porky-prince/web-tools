@@ -6,9 +6,20 @@ import {
 } from '../type';
 
 /**
- * IteratorOwner
+ * Object that can be traversed by {@link Iterator}.
+ *
+ * @typeParam V - Value type yielded by the owner.
+ * @typeParam K - Key type yielded with each value.
  */
 export interface IteratorOwner<V, K = number> {
+  /**
+   * Visits values owned by the object.
+   *
+   * @param breakFlag - Callback result that should stop traversal early.
+   * @param reverse - Whether traversal should run in reverse order.
+   * @param callback - Callback invoked for each value.
+   * @returns `breakFlag` when traversal stops early, otherwise `!breakFlag`.
+   */
   traverse(
     breakFlag: boolean,
     reverse: boolean,
@@ -17,22 +28,26 @@ export interface IteratorOwner<V, K = number> {
 }
 
 /**
- * Iterator
+ * Chainable iterator helper for collection-like objects.
  *
- * @class
- * @template K
- * @template V
- * @template T
+ * @remarks
+ * An iterator delegates actual traversal to its owner, allowing collection
+ * implementations to control ordering while sharing common helpers such as
+ * `map`, `filter`, and `reduce`.
+ *
+ * @typeParam V - Value type yielded by the iterator.
+ * @typeParam K - Key type yielded with each value.
  */
 export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   protected _owner: IteratorOwner<V, K> = this;
   protected _reverse: boolean = false;
 
   /**
-   * bind
-   * @param {IteratorOwner<V, K>} owner
-   * @param {boolean} reverse
-   * @returns {this}
+   * Binds this iterator to an owner.
+   *
+   * @param owner - Object that performs traversal.
+   * @param reverse - Whether traversal should run in reverse order.
+   * @returns This iterator instance.
    */
   bind(owner: IteratorOwner<V, K>, reverse: boolean = false): this {
     this._owner = owner;
@@ -41,14 +56,20 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * reverse
-   * @returns {this}
+   * Toggles the current traversal direction.
+   *
+   * @returns This iterator instance.
    */
   reverse(): this {
     this._reverse = !this._reverse;
     return this;
   }
 
+  /**
+   * Default traversal implementation for unbound iterators.
+   *
+   * @throws Always throws because concrete owners must implement traversal.
+   */
   traverse(
     breakFlag: boolean,
     reverse: boolean,
@@ -59,6 +80,13 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
     );
   }
 
+  /**
+   * Delegates traversal to the bound owner.
+   *
+   * @param breakFlag - Callback result that should stop traversal early.
+   * @param callback - Callback invoked for each value.
+   * @returns `breakFlag` when traversal stops early, otherwise `!breakFlag`.
+   */
   protected baseEach(
     breakFlag: boolean,
     callback: IterateCallback<V, K>
@@ -67,35 +95,43 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * every
-   * @param {FilterCallback<V, K>} callback
-   * @returns {boolean} Returns true if all elements pass the predicate check, else false
+   * Tests whether every value passes `callback`.
+   *
+   * @param callback - Predicate invoked for each value.
+   * @returns `true` when all values pass the predicate.
    */
   every(callback: FilterCallback<V, K>): boolean {
     return this.baseEach(false, callback);
   }
 
   /**
-   * some
-   * @param {FilterCallback<V, K>} callback
-   * @returns {boolean} Returns true if any element passes the predicate check, else false
+   * Tests whether at least one value passes `callback`.
+   *
+   * @param callback - Predicate invoked for each value.
+   * @returns `true` when any value passes the predicate.
    */
   some(callback: FilterCallback<V, K>): boolean {
     return this.baseEach(true, callback);
   }
 
   /**
-   * forEach
-   * @param {IterateCallback<V, K>} callback - Iteratee functions may exit iteration early by explicitly returning false
+   * Invokes `callback` for each value.
+   *
+   * @remarks
+   * Iteration can stop early when `callback` explicitly returns `false`.
+   *
+   * @param callback - Function invoked for each value.
    */
   forEach(callback: IterateCallback<V, K>): void {
     this.baseEach(false, callback);
   }
 
   /**
-   * map
-   * @param {MapCallback<V, K, T>} callback
-   * @return {T[]}
+   * Maps each value to a new array.
+   *
+   * @typeParam T - Result value type.
+   * @param callback - Function that maps each value.
+   * @returns Mapped values in iteration order.
    */
   map<T>(callback: MapCallback<V, K, T>): T[] {
     const result: T[] = [];
@@ -107,9 +143,10 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * filter
-   * @param {FilterCallback<V, K>} callback
-   * @return {V[]}
+   * Filters values into a new array.
+   *
+   * @param callback - Predicate invoked for each value.
+   * @returns Values that pass the predicate in iteration order.
    */
   filter(callback: FilterCallback<V, K>): V[] {
     const result: V[] = [];
@@ -123,9 +160,10 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * find
-   * @param {FilterCallback<V, K>} callback
-   * @return {V | undefined}
+   * Finds the first value that passes `callback`.
+   *
+   * @param callback - Predicate invoked for each value.
+   * @returns First matching value, or `undefined` when none match.
    */
   find(callback: FilterCallback<V, K>): V | undefined {
     let result: V | undefined = undefined;
@@ -140,9 +178,10 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * findIndex
-   * @param {FilterCallback<V, K>} callback
-   * @return {number}
+   * Finds the zero-based iteration index of the first matching value.
+   *
+   * @param callback - Predicate invoked for each value.
+   * @returns First matching iteration index, or `-1` when none match.
    */
   findIndex(callback: FilterCallback<V, K>): number {
     let index: number = -1;
@@ -157,25 +196,31 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   }
 
   /**
-   * reduce
-   * @param {ReduceCallback<V, K, V>} callback
-   * @returns {V | undefined}
+   * Reduces values by using the first iterated value as the initial
+   * accumulator.
+   *
+   * @param callback - Reducer invoked for each value after the first.
+   * @returns Reduced value, or `undefined` when the iterator is empty.
    */
   reduce(callback: ReduceCallback<V, K, V>): V | undefined;
 
   /**
-   * reduce
-   * @param {ReduceCallback<V, K, T>} callback
-   * @param {T} init
-   * @returns {T | undefined}
+   * Reduces values by using `init` as the initial accumulator.
+   *
+   * @typeParam T - Accumulator type.
+   * @param callback - Reducer invoked for each value.
+   * @param init - Initial accumulator value.
+   * @returns Reduced value.
    */
   reduce<T>(callback: ReduceCallback<V, K, T>, init?: T): T | undefined;
 
   /**
-   * reduce
-   * @param {ReduceCallback<V, K, V>} callback
-   * @param {V} init
-   * @returns {V | undefined}
+   * Reduces values into a single accumulator.
+   *
+   * @param callback - Reducer invoked for each value.
+   * @param init - Optional initial accumulator value.
+   * @returns Reduced value, or `undefined` when no initial value is provided
+   * and the iterator is empty.
    */
   reduce(callback: ReduceCallback<V, K, V>, init?: V): V | undefined {
     this.forEach((value: V, key: K, i: number, length: number) => {
@@ -191,14 +236,13 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
 }
 
 /**
- * iterate
+ * Creates an iterator bound to `obj`.
  *
- * @template K
- * @template V
- * @template T
- * @param {IteratorOwner<V, K>} obj
- * @param {boolean} reverse
- * @returns {Iterator<V, K>}
+ * @typeParam V - Value type yielded by the owner.
+ * @typeParam K - Key type yielded with each value.
+ * @param obj - Object that performs traversal.
+ * @param reverse - Whether traversal should run in reverse order.
+ * @returns Iterator bound to `obj`.
  */
 export function iterate<V, K>(
   obj: IteratorOwner<V, K>,

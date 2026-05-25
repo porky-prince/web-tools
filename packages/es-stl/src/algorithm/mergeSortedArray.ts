@@ -1,13 +1,23 @@
 import { SortCallback } from '../type';
 
 /**
- * To merge two sorted arrays into an array sorted by original rules
+ * Merges two sorted arrays into a new sorted array.
  *
- * @template T
- * @param {T[]} array1 an sorted array
- * @param {T[]} array2 an sorted array
- * @param {SortCallback<T>} callback
- * @returns {T[]} new array
+ * @remarks
+ * Both input arrays must already be sorted with the same comparator. The
+ * returned array is a new array; neither input array is mutated.
+ *
+ * @typeParam T - Element type stored in the arrays.
+ * @param array1 - First sorted input array.
+ * @param array2 - Second sorted input array.
+ * @param callback - Sort comparator shared by both input arrays.
+ * @returns A new array containing all values in sorted order.
+ *
+ * @example
+ * ```ts
+ * const merged = mergeSortedArray([1, 4], [2, 3], (a, b) => a - b);
+ * // merged === [1, 2, 3, 4]
+ * ```
  */
 export function mergeSortedArray<T>(
   array1: T[],

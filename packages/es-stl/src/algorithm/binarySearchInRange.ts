@@ -1,41 +1,33 @@
 import { SearchCallback } from '../type';
 
 /**
- * Binary search in range `[a, b)`.
+ * Finds the greatest index whose projected numeric value is less than or
+ * equal to `searchValue`.
  *
- * @template T
- * @param {T[]} array an array after sort from small to large
- * @param {number} searchValue
- * @param {SearchCallback<T>} callback
- * @returns {number}
+ * @remarks
+ * This is useful for locating the lower bound segment of a half-open range
+ * sequence such as `[array[i], array[i + 1])`. The array must already be
+ * sorted in ascending order by the callback value.
+ *
+ * @typeParam T - Element type stored in the array.
+ * @param array - Sorted array to search.
+ * @param searchValue - Numeric value to locate.
+ * @param callback - Projects each element to its comparable numeric value.
+ * @returns The greatest matching lower-bound index, or `-1` before the first
+ * element.
+ *
  * @example
- * const dataList = [{num: 0}, {num: 100}, {num: 300}, {num: 700}, {num: 1000}];
- * binarySearchInRange(dataList, 125, (data: { num: number }) => data.num);
+ * ```ts
+ * const dataList = [
+ *   { value: 0 },
+ *   { value: 100 },
+ *   { value: 300 },
+ *   { value: 700 },
+ * ];
+ *
+ * binarySearchInRange(dataList, 125, (data) => data.value);
  * // => 1
- *
- * i = binarySearchInRange(dataList, -10, (data: { num: number }) => data.num);
- * // => -1
- *
- * i = binarySearchInRange(dataList, 0, (data: { num: number }) => data.num);
- * // => 0
- *
- * i = binarySearchInRange(dataList, 100, (data: { num: number }) => data.num);
- * // => 1
- *
- * i = binarySearchInRange(dataList, 300, (data: { num: number }) => data.num);
- * // => 2
- *
- * i = binarySearchInRange(dataList, 350, (data: { num: number }) => data.num);
- * // => 2
- *
- * i = binarySearchInRange(dataList, 800, (data: { num: number }) => data.num);
- * // => 3
- *
- * i = binarySearchInRange(dataList, 1000, (data: { num: number }) => data.num);
- * // => 4
- *
- * i = binarySearchInRange(dataList, 2000, (data: { num: number }) => data.num);
- * // => 4
+ * ```
  */
 export function binarySearchInRange<T>(
   array: T[],

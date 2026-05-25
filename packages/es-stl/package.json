@@ -7,6 +7,10 @@
   "bugs": "https://github.com/porky-prince/web-tools/issues",
   "license": "MIT",
   "sideEffects": false,
+  "react-native": "./dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -35,7 +39,7 @@
     "watch:js": "vite build --watch",
     "watch:types": "tsc --declaration --emitDeclarationOnly -w",
     "build:js": "vite build",
-    "build:types": "tsc --declaration --emitDeclarationOnly",
+    "build:types": "tsc --declaration --emitDeclarationOnly && node scripts/sync-types.mjs",
     "build": "del dist && npm-run-all -l build:js build:types",
     "test": "jest"
   },

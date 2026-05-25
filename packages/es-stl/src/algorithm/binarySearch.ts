@@ -1,13 +1,25 @@
 import { SearchCallback } from '../type';
 
 /**
- * Binary Search
+ * Finds the index of an item whose projected numeric value equals
+ * `searchValue`.
  *
- * @template T
- * @param {T[]} array an array after sort from small to large
- * @param {number} searchValue
- * @param {SearchCallback<T>} callback
- * @returns {number}
+ * @remarks
+ * The input array must already be sorted in ascending order by the value
+ * returned from `callback`.
+ *
+ * @typeParam T - Element type stored in the array.
+ * @param array - Sorted array to search.
+ * @param searchValue - Numeric value to match.
+ * @param callback - Projects each element to its comparable numeric value.
+ * @returns The matching index, or `-1` when no element matches.
+ *
+ * @example
+ * ```ts
+ * const values = [{ id: 1 }, { id: 3 }, { id: 5 }];
+ * const index = binarySearch(values, 3, (value) => value.id);
+ * // index === 1
+ * ```
  */
 export function binarySearch<T>(
   array: T[],
