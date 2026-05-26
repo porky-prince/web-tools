@@ -22,42 +22,35 @@ export class Dictionary<K extends NumOrStr, V> extends Collection<V, string> {
    * Creates a dictionary, optionally using an existing object as backing
    * storage.
    *
-   * @param obj - Initial object to wrap.
+   * @param object - Initial object to wrap.
    */
-  constructor(obj?: KeyValue<K, V>) {
+  constructor(object?: KeyValue<K, V>) {
     super();
-    if (obj) {
-      this.fromObject(obj);
+    if (object) {
+      this.fromObject(object);
     }
   }
 
   /**
-   * Replaces the backing object with `obj`.
+   * Replaces the backing object with `object`.
    *
-   * @remarks
-   * The object is stored by reference, so external mutations to `obj` are
-   * reflected in this dictionary.
-   *
-   * @param obj - Object to use as dictionary storage.
+   * @param object - Object to use as dictionary storage.
    * @returns This dictionary instance.
    */
-  fromObject(obj: KeyValue<K, V>): this {
-    obj = Object.assign(newObj(), obj);
-    this._obj = obj;
-    this._size = Object.keys(obj).length;
+  fromObject(object: KeyValue<K, V>): this {
+    object = Object.assign(newObj(), object);
+    this._obj = object;
+    this._size = Object.keys(object).length;
     return this;
   }
 
   /**
    * Returns the backing object.
    *
-   * @remarks
-   * The returned object is the dictionary's internal storage, not a clone.
-   *
    * @returns The backing object.
    */
   toObject(): KeyValue<K, V> {
-    return this._obj;
+    return Object.assign(newObj(), this._obj);
   }
 
   /**
@@ -168,7 +161,7 @@ export class Dictionary<K extends NumOrStr, V> extends Collection<V, string> {
     callback: IterateCallback<V, string>
   ): boolean {
     if (this._size === 0) {
-      return false;
+      return !breakFlag;
     }
     const keys: string[] = this.keys();
     const map: KeyValue<K, V> = this._obj;

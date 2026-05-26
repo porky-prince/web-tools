@@ -39,51 +39,18 @@ export interface IteratorOwner<V, K = number> {
  * @typeParam K - Key type yielded with each value.
  */
 export class Iterator<V, K = number> implements IteratorOwner<V, K> {
-  protected _owner: IteratorOwner<V, K> = this;
-  protected _reverse: boolean = false;
-  protected _bindOnce: boolean = false;
-
-  protected bound(once?: boolean): boolean {
-    const _once = this._bindOnce;
-    if (_once) {
-      console.error("It's only can change `Iterator` state once.");
-      return true;
-    }
-    if (once) {
-      this._bindOnce = once;
-    }
-    return _once;
-  }
+  protected _owner: IteratorOwner<V, K>;
+  protected _reverse: boolean;
 
   /**
-   * Binds this iterator to an owner.
+   * Creates an iterator.
    *
    * @param owner - Object that performs traversal.
    * @param reverse - Whether traversal should run in reverse order.
-   * @returns This iterator instance.
    */
-  bind(
-    owner: IteratorOwner<V, K>,
-    reverse: boolean = false,
-    once?: boolean
-  ): this {
-    if (!this.bound(once)) {
-      this._owner = owner;
-      this._reverse = reverse;
-    }
-    return this;
-  }
-
-  /**
-   * Toggles the current traversal direction.
-   *
-   * @returns This iterator instance.
-   */
-  reverse(): this {
-    if (!this.bound()) {
-      this._reverse = !this._reverse;
-    }
-    return this;
+  constructor(owner: IteratorOwner<V, K>, reverse: boolean = false) {
+    this._owner = owner;
+    this._reverse = reverse;
   }
 
   /**
@@ -244,12 +211,15 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * and the iterator is empty.
    */
   reduce(callback: ReduceCallback<V, K, V>, init?: V): V | undefined {
+    let hasInit = arguments.length >= 2;
+
     this.forEach((value: V, key: K, i: number, length: number) => {
-      if (init === undefined) {
+      if (!hasInit) {
         init = value;
+        hasInit = true;
         return;
       }
-      init = callback(init, value, key, i, length);
+      init = callback(init as V, value, key, i, length);
     });
 
     return init;
@@ -267,8 +237,7 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
  */
 export function iterate<V, K>(
   owner: IteratorOwner<V, K>,
-  reverse?: boolean,
-  once?: boolean
+  reverse?: boolean
 ): Iterator<V, K> {
-  return new Iterator<V, K>().bind(owner, reverse, once);
+  return new Iterator<V, K>(owner, reverse);
 }
