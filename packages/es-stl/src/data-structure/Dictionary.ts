@@ -2,6 +2,7 @@ import { IterateCallback, KeyValue, NumOrStr } from '../type';
 import { Collection } from './Collection';
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
+const newObj = () => Object.create(null);
 
 /**
  * Dictionary backed by a plain object.
@@ -15,7 +16,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
  * @typeParam V - Value type stored in the dictionary.
  */
 export class Dictionary<K extends NumOrStr, V> extends Collection<V, string> {
-  protected _obj = {} as KeyValue<K, V>;
+  protected _obj: KeyValue<K, V> = newObj();
 
   /**
    * Creates a dictionary, optionally using an existing object as backing
@@ -41,6 +42,7 @@ export class Dictionary<K extends NumOrStr, V> extends Collection<V, string> {
    * @returns This dictionary instance.
    */
   fromObject(obj: KeyValue<K, V>): this {
+    obj = Object.assign(newObj(), obj);
     this._obj = obj;
     this._size = Object.keys(obj).length;
     return this;
@@ -148,7 +150,7 @@ export class Dictionary<K extends NumOrStr, V> extends Collection<V, string> {
    * Removes all entries from the dictionary.
    */
   clear(): void {
-    this._obj = {} as KeyValue<K, V>;
+    this._obj = newObj();
     this._size = 0;
   }
 

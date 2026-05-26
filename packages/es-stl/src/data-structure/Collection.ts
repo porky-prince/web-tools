@@ -8,7 +8,7 @@ import { iterate, Iterator, IteratorOwner } from './Iterator';
  * @typeParam K - Key type yielded with each value.
  */
 export abstract class Collection<V, K = number> implements IteratorOwner<V, K> {
-  private _iterator: Nullable<Iterator<V, K>> = null;
+  protected _iterators: Nullable<Iterator<V, K>>[] = [null, null];
   protected _size: number = 0;
 
   /**
@@ -41,10 +41,12 @@ export abstract class Collection<V, K = number> implements IteratorOwner<V, K> {
    * @returns An iterator bound to this collection.
    */
   iterator(reverse?: boolean): Iterator<V, K> {
-    if (this._iterator === null) {
-      this._iterator = iterate(this, reverse);
+    const i = Number(!!reverse);
+    const iterators = this._iterators;
+    if (iterators[i] === null) {
+      iterators[i] = iterate(this, reverse, true);
     }
-    return this._iterator.bind(this, reverse);
+    return iterators[i];
   }
 
   /**

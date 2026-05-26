@@ -1,4 +1,4 @@
-import { Nullable, SortCallback } from '../type';
+import { SortCallback } from '../type';
 
 /**
  * Inserts one value into a sorted array while preserving sort order.
@@ -26,19 +26,22 @@ export function mergeIntoSortedArray<T>(
   value: T,
   callback: SortCallback<T>
 ): T[] {
-  const length: number = array.length + 1;
-  let replace: Nullable<T> = null;
+  const length: number = array.length;
+  let replacer = value;
+  let replaced = false;
 
   for (let i = 0; i < length; ++i) {
     const cur: T = array[i];
-    if (replace !== null) {
-      array[i] = replace;
-      replace = cur;
+    if (replaced) {
+      array[i] = replacer;
+      replacer = cur;
     } else if (callback(cur, value) > 0) {
       array[i] = value;
-      replace = cur;
+      replacer = cur;
+      replaced = true;
     }
   }
+  array.push(replacer);
 
   return array;
 }

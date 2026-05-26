@@ -41,6 +41,19 @@ export interface IteratorOwner<V, K = number> {
 export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   protected _owner: IteratorOwner<V, K> = this;
   protected _reverse: boolean = false;
+  protected _bindOnce: boolean = false;
+
+  protected bound(once?: boolean): boolean {
+    const _once = this._bindOnce;
+    if (_once) {
+      console.error("It's only can change `Iterator` state once.");
+      return true;
+    }
+    if (once) {
+      this._bindOnce = once;
+    }
+    return _once;
+  }
 
   /**
    * Binds this iterator to an owner.
@@ -49,9 +62,15 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * @param reverse - Whether traversal should run in reverse order.
    * @returns This iterator instance.
    */
-  bind(owner: IteratorOwner<V, K>, reverse: boolean = false): this {
-    this._owner = owner;
-    this._reverse = reverse;
+  bind(
+    owner: IteratorOwner<V, K>,
+    reverse: boolean = false,
+    once?: boolean
+  ): this {
+    if (!this.bound(once)) {
+      this._owner = owner;
+      this._reverse = reverse;
+    }
     return this;
   }
 
@@ -61,7 +80,9 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * @returns This iterator instance.
    */
   reverse(): this {
-    this._reverse = !this._reverse;
+    if (!this.bound()) {
+      this._reverse = !this._reverse;
+    }
     return this;
   }
 
@@ -236,17 +257,18 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
 }
 
 /**
- * Creates an iterator bound to `obj`.
+ * Creates an iterator bound to `owner`.
  *
  * @typeParam V - Value type yielded by the owner.
  * @typeParam K - Key type yielded with each value.
- * @param obj - Object that performs traversal.
+ * @param owner - Object that performs traversal.
  * @param reverse - Whether traversal should run in reverse order.
- * @returns Iterator bound to `obj`.
+ * @returns Iterator bound to `owner`.
  */
 export function iterate<V, K>(
-  obj: IteratorOwner<V, K>,
-  reverse?: boolean
+  owner: IteratorOwner<V, K>,
+  reverse?: boolean,
+  once?: boolean
 ): Iterator<V, K> {
-  return new Iterator<V, K>().bind(obj, reverse);
+  return new Iterator<V, K>().bind(owner, reverse, once);
 }
