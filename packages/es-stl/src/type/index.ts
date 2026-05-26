@@ -23,6 +23,13 @@ export type Nilable<T> = T | Nil;
 export type Nullable<T> = T | null;
 
 /**
+ * Value that can be `await`.
+ *
+ * @typeParam T - Custom value type.
+ */
+export type Thenable<T> = T | Promise<T>;
+
+/**
  * Record keyed by numbers or strings.
  *
  * @typeParam K - Key type used by the record.

@@ -14,7 +14,7 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.mts",
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.mjs"
       },
       "require": {
@@ -39,7 +39,7 @@
     "watch:js": "vite build --watch",
     "watch:types": "tsc --declaration --emitDeclarationOnly -w",
     "build:js": "vite build",
-    "build:types": "tsc --declaration --emitDeclarationOnly && node scripts/sync-types.mjs",
+    "build:types": "tsc --declaration --emitDeclarationOnly",
     "build": "del dist && npm-run-all -l build:js build:types",
     "test": "jest"
   },

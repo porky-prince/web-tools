@@ -1,14 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { posix } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
-import {
-  generateSourceEntry,
-  sourceEntry,
-} from './scripts/generate-source-entry.mjs';
+import { execCmd } from 'web-build-utils';
 
 const packageJson = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8')
 );
+const sourceEntry = fileURLToPath(new URL('./src/index.ts', import.meta.url));
 
 function getExportDefault(condition) {
   const rootExport = packageJson.exports?.['.'];
@@ -38,7 +37,10 @@ function sourceEntryPlugin() {
   return {
     name: 'es-stl-source-entry',
     buildStart() {
-      generateSourceEntry();
+      return execCmd('npx ctix build', {
+        cwd: __dirname,
+        showLog: false,
+      });
     },
   };
 }
@@ -61,8 +63,6 @@ if (outputDirs.size > 1) {
 if (formats.length === 0) {
   throw new Error('package.json must define a main or module entry.');
 }
-
-generateSourceEntry();
 
 export default defineConfig({
   plugins: [sourceEntryPlugin()],
