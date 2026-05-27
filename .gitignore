@@ -31,3 +31,6 @@
 # dest
 **/dist
 **/build
+
+# docs
+**/docs

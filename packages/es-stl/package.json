@@ -41,6 +41,8 @@
     "build:js": "vite build",
     "build:types": "tsc --declaration --emitDeclarationOnly",
     "build": "del dist && npm-run-all -l build:js build:types",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
     "test": "jest"
   },
   "dependencies": {},
