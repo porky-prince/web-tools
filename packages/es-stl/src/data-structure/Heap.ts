@@ -1,7 +1,21 @@
 /**
  * Max-priority heap.
  *
+ * @remarks
+ * Larger numeric priorities are popped before smaller priorities. Values with
+ * equal priorities are not guaranteed to preserve insertion order.
+ *
  * @typeParam T - Value type stored in the heap.
+ *
+ * @example
+ * ```ts
+ * const heap = new Heap<string>();
+ * heap.push('low', 1);
+ * heap.push('high', 10);
+ *
+ * heap.pop();
+ * // => 'high'
+ * ```
  */
 export class Heap<T> {
   protected _values: T[] = [];
@@ -12,6 +26,12 @@ export class Heap<T> {
    * Checks whether the heap contains no values.
    *
    * @returns `true` when the heap is empty.
+   *
+   * @example
+   * ```ts
+   * new Heap().isEmpty();
+   * // => true
+   * ```
    */
   isEmpty(): boolean {
     return this._size === 0;
@@ -21,6 +41,15 @@ export class Heap<T> {
    * Number of values currently stored in the heap.
    *
    * @returns The heap size.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<string>();
+   * heap.push('job', 1);
+   *
+   * heap.size;
+   * // => 1
+   * ```
    */
   get size(): number {
     return this._size;
@@ -34,6 +63,16 @@ export class Heap<T> {
    *
    * @param value - Value to insert.
    * @param priority - Numeric priority for ordering.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<string>();
+   * heap.push('background', 1);
+   * heap.push('urgent', 100);
+   *
+   * heap.top();
+   * // => 'urgent'
+   * ```
    */
   push(value: T, priority: number): void {
     const values = this._values;
@@ -59,6 +98,19 @@ export class Heap<T> {
    * Removes and returns the highest-priority value.
    *
    * @returns Highest-priority value, or `undefined` when the heap is empty.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<string>();
+   * heap.push('a', 1);
+   * heap.push('b', 2);
+   *
+   * heap.pop();
+   * // => 'b'
+   *
+   * heap.pop();
+   * // => 'a'
+   * ```
    */
   pop(): T | undefined {
     let size: number = this._size;
@@ -114,6 +166,18 @@ export class Heap<T> {
    * Reads the highest-priority value without removing it.
    *
    * @returns Highest-priority value, or `undefined` when the heap is empty.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<string>();
+   * heap.push('ready', 5);
+   *
+   * heap.top();
+   * // => 'ready'
+   *
+   * heap.size;
+   * // => 1
+   * ```
    */
   top(): T | undefined {
     if (this._size === 0) return undefined;
@@ -122,6 +186,20 @@ export class Heap<T> {
 
   /**
    * Trims backing arrays to the current heap size.
+   *
+   * @remarks
+   * This can be useful after many `pop` operations when the heap will remain in
+   * memory and you want its internal arrays to release unused slots.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<number>();
+   * heap.push(1, 1);
+   * heap.push(2, 2);
+   * heap.pop();
+   *
+   * heap.fit();
+   * ```
    */
   fit(): void {
     this._values.length = this._priorities.length = this._size;
@@ -129,6 +207,16 @@ export class Heap<T> {
 
   /**
    * Removes all values from the heap.
+   *
+   * @example
+   * ```ts
+   * const heap = new Heap<string>();
+   * heap.push('task', 1);
+   * heap.clear();
+   *
+   * heap.isEmpty();
+   * // => true
+   * ```
    */
   clear(): void {
     this._values.length = 0;

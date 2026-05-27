@@ -1,10 +1,20 @@
 /**
  * Object key type supported by dictionary-like data structures.
+ *
+ * @example
+ * ```ts
+ * const key: NumOrStr = 'id';
+ * ```
  */
 export type NumOrStr = number | string;
 
 /**
  * Nullish value.
+ *
+ * @example
+ * ```ts
+ * const value: Nil = null;
+ * ```
  */
 export type Nil = null | undefined;
 
@@ -12,6 +22,11 @@ export type Nil = null | undefined;
  * Value that may be `null` or `undefined`.
  *
  * @typeParam T - Non-nullish value type.
+ *
+ * @example
+ * ```ts
+ * const value: Nilable<number> = undefined;
+ * ```
  */
 export type Nilable<T> = T | Nil;
 
@@ -19,13 +34,25 @@ export type Nilable<T> = T | Nil;
  * Value that may be `null`.
  *
  * @typeParam T - Non-null value type.
+ *
+ * @example
+ * ```ts
+ * const currentUser: Nullable<{ name: string }> = null;
+ * ```
  */
 export type Nullable<T> = T | null;
 
 /**
- * Value that can be `await`.
+ * Value that can be awaited directly or after resolving a promise.
  *
  * @typeParam T - Custom value type.
+ *
+ * @example
+ * ```ts
+ * async function resolveValue(value: Thenable<number>): Promise<number> {
+ *   return value;
+ * }
+ * ```
  */
 export type Thenable<T> = T | Promise<T>;
 
@@ -34,13 +61,28 @@ export type Thenable<T> = T | Promise<T>;
  *
  * @typeParam K - Key type used by the record.
  * @typeParam V - Value type stored by the record.
+ *
+ * @example
+ * ```ts
+ * const scores: KeyValue<string, number> = { ada: 10, grace: 20 };
+ * ```
  */
 export type KeyValue<K extends NumOrStr = NumOrStr, V = any> = Record<K, V>;
 
 /**
  * Comparator for sorting and merging values.
  *
+ * @remarks
+ * Use the same comparator for every operation that expects an already sorted
+ * array. A negative return value means the first value comes before the second
+ * value.
+ *
  * @typeParam T - Compared value type.
+ *
+ * @example
+ * ```ts
+ * const byAge: SortCallback<{ age: number }> = (a, b) => a.age - b.age;
+ * ```
  */
 export interface SortCallback<T> {
   /**
@@ -57,7 +99,17 @@ export interface SortCallback<T> {
 /**
  * Projection used by binary search helpers.
  *
+ * @remarks
+ * The projected value must be sorted in ascending order across the searched
+ * array.
+ *
  * @typeParam T - Searched element type.
+ *
+ * @example
+ * ```ts
+ * const getOffset: SearchCallback<{ offset: number }> = (entry) =>
+ *   entry.offset;
+ * ```
  */
 export interface SearchCallback<T> {
   /**
@@ -73,7 +125,23 @@ export interface SearchCallback<T> {
 /**
  * Callback that exposes an element's searchable range.
  *
+ * @remarks
+ * Write inclusive lower and upper bounds into the provided `range` array. The
+ * array is reused by search helpers to avoid allocating a new tuple for each
+ * inspected item.
+ *
  * @typeParam T - Range element type.
+ *
+ * @example
+ * ```ts
+ * const getRange: SearchRangeCallback<{ start: number; end: number }> = (
+ *   range,
+ *   item
+ * ) => {
+ *   range[0] = item.start;
+ *   range[1] = item.end;
+ * };
+ * ```
  */
 export interface SearchRangeCallback<T> {
   /**
@@ -89,8 +157,19 @@ export interface SearchRangeCallback<T> {
 /**
  * Callback invoked while traversing an iterator owner.
  *
+ * @remarks
+ * Returning `false` stops iterator `forEach` traversal early. Other iterator
+ * helpers define their own stop conditions by passing a different break flag.
+ *
  * @typeParam V - Iterated value type.
  * @typeParam K - Iterated key type.
+ *
+ * @example
+ * ```ts
+ * const collectUntilThree: IterateCallback<number, number> = (value) => {
+ *   return value < 3;
+ * };
+ * ```
  */
 export interface IterateCallback<V, K> {
   /**
@@ -110,6 +189,11 @@ export interface IterateCallback<V, K> {
  *
  * @typeParam V - Iterated value type.
  * @typeParam K - Iterated key type.
+ *
+ * @example
+ * ```ts
+ * const isEven: FilterCallback<number, number> = (value) => value % 2 === 0;
+ * ```
  */
 export interface FilterCallback<V, K> {
   /**
@@ -130,6 +214,12 @@ export interface FilterCallback<V, K> {
  * @typeParam V - Iterated value type.
  * @typeParam K - Iterated key type.
  * @typeParam T - Mapped result type.
+ *
+ * @example
+ * ```ts
+ * const label: MapCallback<number, string, string> = (value, key) =>
+ *   `${key}:${value}`;
+ * ```
  */
 export interface MapCallback<V, K, T> {
   /**
@@ -150,6 +240,12 @@ export interface MapCallback<V, K, T> {
  * @typeParam V - Iterated value type.
  * @typeParam K - Iterated key type.
  * @typeParam T - Accumulator type.
+ *
+ * @example
+ * ```ts
+ * const sum: ReduceCallback<number, number, number> = (total, value) =>
+ *   total + value;
+ * ```
  */
 export interface ReduceCallback<V, K, T> {
   /**

@@ -7,7 +7,8 @@ import { SearchCallback } from '../type';
  * @remarks
  * This is useful for locating the lower bound segment of a half-open range
  * sequence such as `[array[i], array[i + 1])`. The array must already be
- * sorted in ascending order by the callback value.
+ * sorted in ascending order by the callback value. When `searchValue` is lower
+ * than the first projected value, the function returns `-1`.
  *
  * @typeParam T - Element type stored in the array.
  * @param array - Sorted array to search.
@@ -26,6 +27,18 @@ import { SearchCallback } from '../type';
  * ];
  *
  * binarySearchInRange(dataList, 125, (data) => data.value);
+ * // => 1
+ * ```
+ *
+ * @example Value before the first range
+ * ```ts
+ * binarySearchInRange([10, 20, 30], 5, (value) => value);
+ * // => -1
+ * ```
+ *
+ * @example Exact lower-bound match
+ * ```ts
+ * binarySearchInRange([10, 20, 30], 20, (value) => value);
  * // => 1
  * ```
  */

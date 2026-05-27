@@ -5,7 +5,8 @@ import { SearchRangeCallback } from '../type';
  *
  * @remarks
  * The callback writes the searchable range into the provided two-item
- * `range` array as `[start, end]`. Ranges must be ordered from low to high.
+ * `range` array as `[start, end]`. Bounds are treated as inclusive and ranges
+ * must be ordered from low to high by their bounds.
  *
  * @typeParam T - Object type that describes each searchable range.
  * @param array - Sorted array of range-like objects.
@@ -26,6 +27,20 @@ import { SearchRangeCallback } from '../type';
  *   range[1] = data.end;
  * });
  * // index === 1
+ * ```
+ *
+ * @example Missing range
+ * ```ts
+ * const pages = [
+ *   { from: 1, to: 10 },
+ *   { from: 20, to: 30 },
+ * ];
+ *
+ * binarySearchByRange(pages, 15, (range, page) => {
+ *   range[0] = page.from;
+ *   range[1] = page.to;
+ * });
+ * // => -1
  * ```
  */
 export function binarySearchByRange<T extends object>(

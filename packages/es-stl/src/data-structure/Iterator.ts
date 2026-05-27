@@ -8,12 +8,20 @@ import {
 /**
  * Object that can be traversed by {@link Iterator}.
  *
+ * @remarks
+ * Implement this interface when a collection wants to use the shared
+ * {@link Iterator} helpers without extending the base collection class.
+ *
  * @typeParam V - Value type yielded by the owner.
  * @typeParam K - Key type yielded with each value.
  */
 export interface IteratorOwner<V, K = number> {
   /**
    * Visits values owned by the object.
+   *
+   * @remarks
+   * The owner controls traversal order. Return `breakFlag` when traversal stops
+   * early; otherwise return `!breakFlag` after all values are visited.
    *
    * @param breakFlag - Callback result that should stop traversal early.
    * @param reverse - Whether traversal should run in reverse order.
@@ -37,6 +45,16 @@ export interface IteratorOwner<V, K = number> {
  *
  * @typeParam V - Value type yielded by the iterator.
  * @typeParam K - Key type yielded with each value.
+ *
+ * @example
+ * ```ts
+ * const dict = new Dictionary({ a: 1, b: 2, c: 3 });
+ *
+ * dict.iterator()
+ *   .filter((value) => value > 1)
+ *   .map((value) => value * 10);
+ * // => [20, 30]
+ * ```
  */
 export class Iterator<V, K = number> implements IteratorOwner<V, K> {
   protected _owner: IteratorOwner<V, K>;
@@ -47,6 +65,15 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param owner - Object that performs traversal.
    * @param reverse - Whether traversal should run in reverse order.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   * const iterator = new Iterator(dict);
+   *
+   * iterator.map((value) => value);
+   * // => [1, 2]
+   * ```
    */
   constructor(owner: IteratorOwner<V, K>, reverse: boolean = false) {
     this._owner = owner;
@@ -55,6 +82,11 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
 
   /**
    * Default traversal implementation for unbound iterators.
+   *
+   * @remarks
+   * Regular users normally call traversal helpers such as {@link forEach}
+   * instead of this method. Collection owners provide the concrete traversal
+   * implementation.
    *
    * @throws Always throws because concrete owners must implement traversal.
    */
@@ -87,6 +119,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Predicate invoked for each value.
    * @returns `true` when all values pass the predicate.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 2, b: 4 });
+   *
+   * dict.iterator().every((value) => value % 2 === 0);
+   * // => true
+   * ```
    */
   every(callback: FilterCallback<V, K>): boolean {
     return this.baseEach(false, callback);
@@ -97,6 +137,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Predicate invoked for each value.
    * @returns `true` when any value passes the predicate.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 3 });
+   *
+   * dict.iterator().some((value) => value > 2);
+   * // => true
+   * ```
    */
   some(callback: FilterCallback<V, K>): boolean {
     return this.baseEach(true, callback);
@@ -109,6 +157,17 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * Iteration can stop early when `callback` explicitly returns `false`.
    *
    * @param callback - Function invoked for each value.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   * const seen: number[] = [];
+   *
+   * dict.iterator().forEach((value) => {
+   *   seen.push(value);
+   * });
+   * // seen === [1, 2]
+   * ```
    */
   forEach(callback: IterateCallback<V, K>): void {
     this.baseEach(false, callback);
@@ -120,6 +179,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * @typeParam T - Result value type.
    * @param callback - Function that maps each value.
    * @returns Mapped values in iteration order.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   *
+   * dict.iterator().map((value, key) => `${key}:${value}`);
+   * // => ['a:1', 'b:2']
+   * ```
    */
   map<T>(callback: MapCallback<V, K, T>): T[] {
     const result: T[] = [];
@@ -135,6 +202,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Predicate invoked for each value.
    * @returns Values that pass the predicate in iteration order.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2, c: 3 });
+   *
+   * dict.iterator().filter((value) => value >= 2);
+   * // => [2, 3]
+   * ```
    */
   filter(callback: FilterCallback<V, K>): V[] {
     const result: V[] = [];
@@ -152,6 +227,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Predicate invoked for each value.
    * @returns First matching value, or `undefined` when none match.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   *
+   * dict.iterator().find((value) => value > 1);
+   * // => 2
+   * ```
    */
   find(callback: FilterCallback<V, K>): V | undefined {
     let result: V | undefined = undefined;
@@ -170,6 +253,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Predicate invoked for each value.
    * @returns First matching iteration index, or `-1` when none match.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   *
+   * dict.iterator().findIndex((value) => value === 2);
+   * // => 1
+   * ```
    */
   findIndex(callback: FilterCallback<V, K>): number {
     let index: number = -1;
@@ -189,6 +280,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    *
    * @param callback - Reducer invoked for each value after the first.
    * @returns Reduced value, or `undefined` when the iterator is empty.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2, c: 3 });
+   *
+   * dict.iterator().reduce((sum, value) => sum + value);
+   * // => 6
+   * ```
    */
   reduce(callback: ReduceCallback<V, K, V>): V | undefined;
 
@@ -199,6 +298,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
    * @param callback - Reducer invoked for each value.
    * @param init - Initial accumulator value.
    * @returns Reduced value.
+   *
+   * @example
+   * ```ts
+   * const dict = new Dictionary({ a: 1, b: 2 });
+   *
+   * dict.iterator().reduce((sum, value) => sum + value, 10);
+   * // => 13
+   * ```
    */
   reduce<T>(callback: ReduceCallback<V, K, T>, init?: T): T | undefined;
 
@@ -234,6 +341,14 @@ export class Iterator<V, K = number> implements IteratorOwner<V, K> {
  * @param owner - Object that performs traversal.
  * @param reverse - Whether traversal should run in reverse order.
  * @returns Iterator bound to `owner`.
+ *
+ * @example
+ * ```ts
+ * const dict = new Dictionary({ a: 1, b: 2 });
+ *
+ * iterate(dict).map((value) => value * 2);
+ * // => [2, 4]
+ * ```
  */
 export function iterate<V, K>(
   owner: IteratorOwner<V, K>,

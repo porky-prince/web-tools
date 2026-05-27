@@ -5,7 +5,9 @@ import { SortCallback } from '../type';
  *
  * @remarks
  * Both input arrays must already be sorted with the same comparator. The
- * returned array is a new array; neither input array is mutated.
+ * returned array is a new array; neither input array is mutated. When the
+ * comparator treats two values as equal, the value from `array2` is emitted
+ * first.
  *
  * @typeParam T - Element type stored in the arrays.
  * @param array1 - First sorted input array.
@@ -17,6 +19,15 @@ import { SortCallback } from '../type';
  * ```ts
  * const merged = mergeSortedArray([1, 4], [2, 3], (a, b) => a - b);
  * // merged === [1, 2, 3, 4]
+ * ```
+ *
+ * @example Merging objects by timestamp
+ * ```ts
+ * const left = [{ time: 10 }, { time: 30 }];
+ * const right = [{ time: 20 }];
+ *
+ * const merged = mergeSortedArray(left, right, (a, b) => a.time - b.time);
+ * // merged.map((item) => item.time) === [10, 20, 30]
  * ```
  */
 export function mergeSortedArray<T>(

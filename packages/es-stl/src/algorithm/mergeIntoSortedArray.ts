@@ -6,7 +6,8 @@ import { SortCallback } from '../type';
  * @remarks
  * This function mutates and returns the input array. Equal items remain before
  * the inserted value because insertion occurs at the first item greater than
- * `value`.
+ * `value`. The comparator must use the same ascending ordering that was used
+ * to sort `array`.
  *
  * @typeParam T - Element type stored in the array.
  * @param array - Sorted array to mutate.
@@ -19,6 +20,21 @@ import { SortCallback } from '../type';
  * const values = [1, 3, 5];
  * mergeIntoSortedArray(values, 4, (a, b) => a - b);
  * // values === [1, 3, 4, 5]
+ * ```
+ *
+ * @example Inserting an object by score
+ * ```ts
+ * const rankings = [
+ *   { name: 'Ada', score: 10 },
+ *   { name: 'Linus', score: 30 },
+ * ];
+ *
+ * mergeIntoSortedArray(
+ *   rankings,
+ *   { name: 'Grace', score: 20 },
+ *   (a, b) => a.score - b.score
+ * );
+ * // rankings.map((item) => item.name) === ['Ada', 'Grace', 'Linus']
  * ```
  */
 export function mergeIntoSortedArray<T>(

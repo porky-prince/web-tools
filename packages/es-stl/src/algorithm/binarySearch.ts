@@ -5,8 +5,9 @@ import { SearchCallback } from '../type';
  * `searchValue`.
  *
  * @remarks
- * The input array must already be sorted in ascending order by the value
- * returned from `callback`.
+ * The input array must already be sorted in ascending order by the numeric
+ * value returned from `callback`. If multiple elements project to the same
+ * value, any matching index may be returned.
  *
  * @typeParam T - Element type stored in the array.
  * @param array - Sorted array to search.
@@ -19,6 +20,18 @@ import { SearchCallback } from '../type';
  * const values = [{ id: 1 }, { id: 3 }, { id: 5 }];
  * const index = binarySearch(values, 3, (value) => value.id);
  * // index === 1
+ * ```
+ *
+ * @example Searching primitive values
+ * ```ts
+ * binarySearch([2, 4, 8, 16], 8, (value) => value);
+ * // => 2
+ * ```
+ *
+ * @example Handling a missing value
+ * ```ts
+ * binarySearch([10, 20, 30], 25, (value) => value);
+ * // => -1
  * ```
  */
 export function binarySearch<T>(
