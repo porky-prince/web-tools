@@ -21,6 +21,7 @@
     "test": "pnpm --filter \"*\" test",
     "build": "pnpm --filter \"*\" build",
     "create": "tsx scripts/create.ts",
+    "docs": "tsx scripts/docs.ts",
     "pub:changeset": "changeset",
     "pub:release": "changeset publish"
   },
