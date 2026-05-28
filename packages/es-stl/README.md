@@ -59,3 +59,7 @@ mergeSortedArray([1, 4], [2, 3], (a, b) => a - b); // [1, 2, 3, 4]
 
 toFixed(1.235, 2); // '1.24'
 ```
+
+## Documentation
+
+See [`es-stl`](https://porky-prince.github.io/web-tools/es-stl/)
