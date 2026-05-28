@@ -1,0 +1,25 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/**/*.ts"],
+  "entryPointStrategy": "expand",
+  "exclude": ["src/index.ts"],
+  "tsconfig": "tsconfig.json",
+  "out": "../../docs/es-stl",
+  "readme": "README.md",
+  "projectDocuments": ["CHANGELOG.md"],
+  "includeVersion": true,
+  "cleanOutputDir": true,
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "sourceLinkExternal": true,
+  "sourceLinkTemplate": "https://github.com/porky-prince/web-tools/blob/{gitRevision}/{path}#L{line}",
+  "navigation": {
+    "includeFolders": true,
+    "compactFolders": false,
+    "excludeReferences": true
+  },
+  "navigationLinks": {
+    "GitHub": "https://github.com/porky-prince/web-tools/tree/main/packages/es-stl",
+    "npm": "https://www.npmjs.com/package/es-stl"
+  }
+}
