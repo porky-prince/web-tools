@@ -1,5 +1,11 @@
 # es-stl
 
+## 3.0.2
+
+### Patch Changes
+
+- [#8](https://github.com/porky-prince/web-tools/pull/8) [`3c7cd3d`](https://github.com/porky-prince/web-tools/commit/3c7cd3dad3a1ca469f826ca0c6a8c6a7aec24345) Thanks [@porky-prince](https://github.com/porky-prince)! - fix(es-stl): there's not index.d.ts in the dist when building for the first time
+
 ## 3.0.1
 
 ### Patch Changes
