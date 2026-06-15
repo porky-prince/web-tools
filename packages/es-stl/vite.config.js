@@ -3,7 +3,6 @@ import { posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { execCmd } from 'web-build-utils';
 
 const packageJson = JSON.parse(
   readFileSync(new URL('./package.json', import.meta.url), 'utf8')
@@ -34,18 +33,6 @@ function getBuildOutput(outputPath) {
   };
 }
 
-function sourceEntryPlugin() {
-  return {
-    name: 'es-stl-source-entry',
-    buildStart() {
-      return execCmd('npx ctix build', {
-        cwd: __dirname,
-        showLog: false,
-      });
-    },
-  };
-}
-
 const cjsOutput = getBuildOutput(
   packageJson.main ?? getExportDefault('require')
 );
@@ -67,7 +54,6 @@ if (formats.length === 0) {
 
 export default defineConfig({
   plugins: [
-    sourceEntryPlugin(),
     dts({
       exclude: ['**/*.test.*'],
     }),

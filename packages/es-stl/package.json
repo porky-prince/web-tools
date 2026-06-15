@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "vite build --watch",
-    "build": "del dist && vite build",
+    "build": "del dist && ctix build && vite build",
     "docs": "typedoc",
     "docs:watch": "typedoc --watch",
     "test": "jest"
