@@ -20,12 +20,8 @@
     "directory": "packages/<%= packageName %>"
   },
   "scripts": {
-    "start": "npm-run-all -l -p watch:*",
-    "watch:js": "vite build --watch",
-    "watch:types": "tsc --declaration --emitDeclarationOnly -w",
-    "build:js": "vite build",
-    "build:types": "tsc --declaration --emitDeclarationOnly",
-    "build": "del dist && npm-run-all -l build:js build:types",
+    "start": "vite build --watch",
+    "build": "del dist && vite build",
     "test": "jest"
   },
   "dependencies": {},

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 import { execCmd } from 'web-build-utils';
 
 const packageJson = JSON.parse(
@@ -65,7 +66,12 @@ if (formats.length === 0) {
 }
 
 export default defineConfig({
-  plugins: [sourceEntryPlugin()],
+  plugins: [
+    sourceEntryPlugin(),
+    dts({
+      exclude: ['**/*.test.*'],
+    }),
+  ],
   build: {
     lib: {
       entry: sourceEntry,
