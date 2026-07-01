@@ -47,6 +47,9 @@ importers:
       eslint:
         specifier: ^9.36.0
         version: 9.39.4(jiti@2.6.1)
+      eslint-config-porky:
+        specifier: ^0.0.1
+        version: 0.0.1(eslint@9.39.4(jiti@2.6.1))
       eslint-config-prettier:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.39.4(jiti@2.6.1))
@@ -1618,6 +1621,11 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
+  eslint-config-porky@0.0.1:
+    resolution: {integrity: sha512-a1tOLK19BklTKQFayYy+RdTzLMNgZMH7P8opowrJ29K5n3M4GaMjXsICG9JFY0J3dIduUfOgzuu9+sKqWxPRcg==}
+    peerDependencies:
+      eslint: '>=9'
+
   eslint-config-prettier@10.1.8:
     resolution: {integrity: sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==}
     hasBin: true
@@ -2796,6 +2804,10 @@ packages:
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
+
+  parse-gitignore@2.0.0:
+    resolution: {integrity: sha512-RmVuCHWsfu0QPNW+mraxh/xjQVw/lhUCUru8Zni3Ctq3AoMhpDTq0OVdKS6iesd6Kqb7viCV3isAL43dciOSog==}
+    engines: {node: '>=14'}
 
   parse-json@4.0.0:
     resolution: {integrity: sha512-aOIos8bujGN93/8Ox/jPLh7RwVnPEysynVFE+fQZyg6jKELEHwzgKdLRFHUgXJL6kylijVSBC4BvN9OmsB48Rw==}
@@ -5534,6 +5546,11 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
+  eslint-config-porky@0.0.1(eslint@9.39.4(jiti@2.6.1)):
+    dependencies:
+      eslint: 9.39.4(jiti@2.6.1)
+      parse-gitignore: 2.0.0
+
   eslint-config-prettier@10.1.8(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       eslint: 9.39.4(jiti@2.6.1)
@@ -6919,6 +6936,8 @@ snapshots:
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
+
+  parse-gitignore@2.0.0: {}
 
   parse-json@4.0.0:
     dependencies:
