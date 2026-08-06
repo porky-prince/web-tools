@@ -1,4 +1,10 @@
-import { block, clearBlocks, getBlock, removeBlock } from '../src/block';
+import {
+  block,
+  blockWrap,
+  clearBlocks,
+  getBlock,
+  removeBlock,
+} from '../src/block';
 import { blockGlobalOptions } from '../src/globalOptions';
 import { Block } from '../src/types';
 
@@ -56,6 +62,39 @@ describe('block', () => {
     expect(created.init).toHaveBeenCalledWith(options);
     expect(created.show).toHaveBeenNthCalledWith(1, true);
     expect(created.show).toHaveBeenNthCalledWith(2, false);
+  });
+
+  describe('blockWrap', () => {
+    it('returns the callback result and hides the block after it settles', async () => {
+      const created = createBlockMock<HTMLElement>();
+      const options = { parent: {} as HTMLElement };
+
+      blockGlobalOptions.creator = jest.fn(
+        () => created
+      ) as typeof blockGlobalOptions.creator;
+
+      await expect(
+        blockWrap('request', async () => 'completed', options)
+      ).resolves.toBe('completed');
+      expect(created.init).toHaveBeenCalledWith(options);
+      expect(created.show.mock.calls).toEqual([[true], [false]]);
+    });
+
+    it('hides the block when the callback throws', async () => {
+      const created = createBlockMock();
+      const error = new Error('request failed');
+
+      blockGlobalOptions.creator = jest.fn(
+        () => created as Block<unknown>
+      ) as typeof blockGlobalOptions.creator;
+
+      await expect(
+        blockWrap('request', () => {
+          throw error;
+        })
+      ).rejects.toBe(error);
+      expect(created.show.mock.calls).toEqual([[true], [false]]);
+    });
   });
 
   it('clears and deletes a tracked block', () => {

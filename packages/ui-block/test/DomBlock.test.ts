@@ -47,6 +47,8 @@ describe('DomBlock', () => {
     expect(overlay.style.right).toBe('0');
     expect(overlay.style.bottom).toBe('0');
     expect(overlay.style.left).toBe('0');
+    expect(overlay.style.zIndex).toBe('9999');
+    expect(overlay.style.pointerEvents).toBe('auto');
   });
 
   it('applies the debug background color when enabled', () => {

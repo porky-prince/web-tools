@@ -1,28 +1,25 @@
-// Represents a unique identifier for a block instance
+/** Key used to cache and reuse a block instance. */
 export type BlockKey = string | number | object;
 
-// Global configuration options for the block system
+/** Global defaults used when creating blocks. */
 export interface BlockGlobalOptions {
-  // Factory function to create new block instances
+  /** Creates the implementation used for a new key. */
   creator?: <Node>() => Block<Node>;
-  // Enables visual debugging with semi-transparent overlay
+  /** Adds a visible background to the default DOM overlay. */
   debug?: boolean;
 }
 
-// Configuration options for individual block instances
+/** Options passed to a block implementation. */
 export interface BlockOptions<Node> {
-  // Parent DOM node where the block will be appended
+  /** Node covered by the block. Defaults to `document.body` for `DomBlock`. */
   parent?: Node;
-  // Additional custom arguments for block customization
+  /** Implementation-specific configuration. */
   args?: any;
 }
 
-// Interface defining the contract for block implementations
+/** Lifecycle implemented by a block renderer. */
 export interface Block<Node> {
-  // Initialize the block with optional configuration
   init(options?: BlockOptions<Node>): void;
-  // Show or hide the block, with optional updated configuration
   show(show: boolean, options?: BlockOptions<Node>): void;
-  // Clean up and destroy the block instance
   clear(): void;
 }
