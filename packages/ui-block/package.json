@@ -1,6 +1,6 @@
 {
   "name": "ui-block",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Blocking user interaction while async work is running",
   "author": "Porky Ke",
   "homepage": "https://github.com/porky-prince/web-tools/packages/ui-block#readme",
