@@ -1,5 +1,11 @@
 # es-stl
 
+## 3.0.3
+
+### Patch Changes
+
+- [#11](https://github.com/porky-prince/web-tools/pull/11) [`0eb017c`](https://github.com/porky-prince/web-tools/commit/0eb017c8f1ff4a22f42971b0cc2777c42084066e) Thanks [@porky-prince](https://github.com/porky-prince)! - Add documented common utility, constructor, branding, and callback types.
+
 ## 3.0.2
 
 ### Patch Changes

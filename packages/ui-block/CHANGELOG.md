@@ -1,5 +1,12 @@
 # ui-block
 
+## 0.0.3
+
+### Patch Changes
+
+- [#11](https://github.com/porky-prince/web-tools/pull/11) [`0eb017c`](https://github.com/porky-prince/web-tools/commit/0eb017c8f1ff4a22f42971b0cc2777c42084066e) Thanks [@porky-prince](https://github.com/porky-prince)! - Add `blockWrap` for blocking callbacks and strengthen the default DOM overlay's
+  interaction coverage.
+
 ## 0.0.2
 
 ### Patch Changes
